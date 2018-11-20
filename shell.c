@@ -5,15 +5,14 @@
 #include "shell.h"
 
 int main(){
-  char line[] = "ls -l";
+  char line[] = "ls -l -a";
   char ** args = parse_args(line);
-  printf("args[0] : %s, args[1] : %s, args[2] : %s\n",args[0],args[1],args[2]);
   execvp(args[0], args);
   return 0;
 }
 
 char ** parse_args( char * line ){
-  int count = 0;
+  int count = 1;
   char * temp = strchr(line,' ');
   while(temp != 0){
     count++;
