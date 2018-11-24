@@ -11,6 +11,7 @@
 #include "shell.h"
 
 int main(int argc, char *argv[]){
+  /* We don't need this part for a shell
   if(argc > 1){
     char * args[argc];
     for(int i = 0;i < argc - 1;i++){
@@ -18,13 +19,33 @@ int main(int argc, char *argv[]){
     }
     args[argc - 1] = '\0';
     execvp(args[0], args);
-  }else{
-    char ** args;
-    char *line;
+  }
+  */
+
+  //Input stuff
+  char ** args;
+  char line[99];
+  char *temp;
+
+  //Forking stuff
+  pid_t child,pid;
+  int status;
+  while(1){
     printf("enter command\n");
-    scanf("%99[^\n]",line);
+    scanf("%[^\n]",line);
+    
     args = parse_args(line);
-    execvp(args[0], args);
+
+    //Running process
+    child = fork();
+    if(child){
+      //Parent Code
+      pid = wait(&status);
+    }else{
+      //Child Code
+      execvp(args[0], args);
+    }
+    scanf("%s",temp);
   }
   return 0;
 }
