@@ -12,14 +12,14 @@
 
 int main(int argc, char *argv[]){
   /* We don't need this part for a shell
-  if(argc > 1){
-    char * args[argc];
-    for(int i = 0;i < argc - 1;i++){
-      args[i] = argv[i+1];
-    }
-    args[argc - 1] = '\0';
-    execvp(args[0], args);
-  }
+     if(argc > 1){
+     char * args[argc];
+     for(int i = 0;i < argc - 1;i++){
+     args[i] = argv[i+1];
+     }
+     args[argc - 1] = '\0';
+     execvp(args[0], args);
+     }
   */
 
   //Input stuff
@@ -35,8 +35,8 @@ int main(int argc, char *argv[]){
   while(1){
     printf("enter command : ");
 
-    // Reads 99 charcters in single line until new line
-    scanf("%[99^\n]",line);
+    // Reads charcters in single line until new line
+    scanf("%[^\n]",line);
     // Clears new line
     scanf("%c",&temp);
 
