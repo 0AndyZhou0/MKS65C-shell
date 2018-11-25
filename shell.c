@@ -25,15 +25,21 @@ int main(int argc, char *argv[]){
   //Input stuff
   char ** args;
   char line[99];
-  char *temp;
+  char temp;
 
   //Forking stuff
   pid_t child,pid;
   int status;
+
+  
   while(1){
-    printf("enter command\n");
-    scanf("%[^\n]",line);
-    
+    printf("enter command : ");
+
+    // Reads 99 charcters in single line until new line
+    scanf("%[99^\n]",line);
+    // Clears new line
+    scanf("%c",&temp);
+
     args = parse_args(line);
 
     //Running process
@@ -45,7 +51,6 @@ int main(int argc, char *argv[]){
       //Child Code
       execvp(args[0], args);
     }
-    scanf("%s",temp);
   }
   return 0;
 }
