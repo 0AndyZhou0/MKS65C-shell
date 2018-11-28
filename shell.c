@@ -27,11 +27,6 @@ int main(int argc, char *argv[]){
   char line[99];
   char temp;
   
-  //
-   char  *gdir;
-   char  *dir;
-   char  *to;
-   char buf[1000];
   //Forking stuff
   pid_t child,pid;
   int status;
