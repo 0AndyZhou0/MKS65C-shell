@@ -26,7 +26,12 @@ int main(int argc, char *argv[]){
   char ** args;
   char line[99];
   char temp;
-
+  
+  //
+   char  *gdir;
+   char  *dir;
+   char  *to;
+   char buf[1000];
   //Forking stuff
   pid_t child,pid;
   int status;
@@ -41,7 +46,11 @@ int main(int argc, char *argv[]){
     scanf("%c",&temp);
 
     args = parse_args(line);
-
+	//Hard Coded Commands
+	if (!strcmp(args[0], "exit")) {exit(0);}  
+	else if(!strcmp(args[0], "cd")){
+			chdir(args[1]);
+	}
     //Running process
     child = fork();
     if(child){
