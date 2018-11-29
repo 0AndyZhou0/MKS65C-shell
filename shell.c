@@ -11,56 +11,50 @@
 #include "shell.h"
 
 int main(int argc, char *argv[]){
-  /* We don't need this part for a shell
-     if(argc > 1){
-     char * args[argc];
-     for(int i = 0;i < argc - 1;i++){
-     args[i] = argv[i+1];
-     }
-     args[argc - 1] = '\0';
-     execvp(args[0], args);
-     }
-  */
-
   //Input stuff
-  char ** args;
+  char ** commands;
   char line[99];
   char temp;
   char buffer[99];
-  //Forking stuff
-  pid_t child,pid;
-  int status;
+  
 
   
   while(1){
-	//USERNAME stuff too hard to find for now
+    //gets USERNAME
     printf("%s:%s$",getenv("USERNAME"),getcwd(buffer,sizeof(buffer)));
 
     // Reads charcters in single line until new line
     scanf("%[^\n]",line);
     // Clears new line
     scanf("%c",&temp);
-	
-    args = parse_args(line);
-	//Hard Coded Commands
-	if (!strcmp(args[0], "exit")) {exit(0);}  
-	else if(!strcmp(args[0], "cd")){
-			chdir(args[1]);
-	}
-    //Running process
-    child = fork();
-    if(child){
-      //Parent Code
-      pid = wait(&status);
+
+    //checks for semicolon
+    if(strchr(line,';')){
+      commands = run_semicolon(line);
     }else{
-      //Child Code
-      execvp(args[0], args);
+      run_command(line);
     }
   }
   return 0;
 }
 
-char ** parse_args( char * line ){
+char ** run_semicolon(char * line){
+  int count = 1;
+  char * temp = strchr(line,';');
+  while(temp != 0){
+    count++;
+    temp = strchr(temp + 1,';');
+  }
+  char **args = (char**)malloc(count * sizeof(char*));
+  for(int i = 0;i < count + 1;i++){
+    args[i] = strsep(&line, ";");
+    if(args[i]){
+      run_command(args[i]);
+    }
+  }
+}
+
+char ** parse_args(char * line){
   int count = 1;
   char * temp = strchr(line,' ');
   while(temp != 0){
@@ -70,7 +64,32 @@ char ** parse_args( char * line ){
   char **args = (char**)malloc(count * sizeof(char*));
   for(int i = 0;i < count + 1;i++){
     args[i] = strsep(&line, " ");
+
+    //Double Spaces are broken.
   }
   return args;
 }
 
+void run_command(char * command){
+  char ** args;
+
+  //Forking stuff
+  pid_t child,pid;
+  int status;
+
+  args = parse_args(command);
+  //Hard Coded Commands
+  if (!strcmp(args[0], "exit")) {exit(0);}  
+  else if(!strcmp(args[0], "cd")){
+    chdir(args[1]);
+  }
+  //Running process
+  child = fork();
+  if(child){
+    //Parent Code
+    pid = wait(&status);
+  }else{
+    //Child Code
+    execvp(args[0], args);
+  }
+}
