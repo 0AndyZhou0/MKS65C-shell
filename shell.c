@@ -33,6 +33,7 @@ int main(int argc, char *argv[]){
 
   
   while(1){
+	//USERNAME stuff too hard to find for now
     printf("%s:%s$",getenv("USERNAME"),getcwd(buffer,sizeof(buffer)));
 
     // Reads charcters in single line until new line
