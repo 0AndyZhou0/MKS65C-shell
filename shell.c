@@ -26,20 +26,20 @@ int main(int argc, char *argv[]){
   char ** args;
   char line[99];
   char temp;
-  
+  char buffer[99];
   //Forking stuff
   pid_t child,pid;
   int status;
 
   
   while(1){
-    printf("enter command : ");
+    printf("%s:%s$",getenv("USERNAME"),getcwd(buffer,sizeof(buffer)));
 
     // Reads charcters in single line until new line
     scanf("%[^\n]",line);
     // Clears new line
     scanf("%c",&temp);
-
+	
     args = parse_args(line);
 	//Hard Coded Commands
 	if (!strcmp(args[0], "exit")) {exit(0);}  
