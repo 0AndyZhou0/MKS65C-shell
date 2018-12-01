@@ -49,50 +49,68 @@ char ** run_semicolon(char * line){
   char **args = (char**)malloc((count) * sizeof(char*));
   for(int i = 0;i < count + 1;i++){
     args[i] = strsep(&line, ";");
-    char ** commands = parse_args(args[i]);
-    run_command(commands[i]);
+    printf("%s\n",args[i]);
+    //char ** commands = parse_args(args[i]);
+    run_command(args[i]);
   }
-  free(args);
+  
 }
 
-char ** parse_args(char * line){
+char * white_out(char * string){
+  char * no_space = string;
+  int i = 0;
+  int x = 0;
+  while(string[i]){
+    if(string[i] != ' '){
+      no_space[x] = string[i];
+      x++;
+    }
+    i++;
+  }
+  no_space[x] = 0;
+  return no_space;
+}
+
+void run_command(char * command){
+  //Forking stuff
+  pid_t child,pid;
+  int status;
+
+  //Splits arguments of command
+  //args = parse_args(command);
   int count = 1;
-  char * temp = strchr(line,' ');
+  char * temp = strchr(command,' ');
   while(temp != 0){
     temp = strchr(temp + 1,' ');
     count++;
   }
   char **args = (char**)malloc((count) * sizeof(char*));
-  for(int i = 0;i < count + 1;i++){
-    args[i] = strsep(&line, " ");
-    strcmp(args[i],white_out(args[i]));
-    //Double Spaces are broken.
-  }
-  return args;
-}
-
-char * white_out(char * string){
-  while(string){
-    if(string[0] != ' '){
-      return string;
+  //for(int i = 0;i < count + 1;i++){
+  int i = 0;
+  while(command){
+    args[i] = strsep(&command, " ");
+    if(args[i]){
+      strcpy(args[i],white_out(args[i]));
+      printf("%s\n",args[i]);
     }
-    string++;
+    if(args[i] == 0){
+      i--;
+    }
+    //args[i] = white_out(args[i]);
+    //if(!(args[i])){
+    //  i--;
+    //}
+    //Double Spaces are broken.
+    i++;
   }
-}
-
-void run_command(char * command){
-  char ** args;
-
-  //Forking stuff
-  pid_t child,pid;
-  int status;
-
-  args = parse_args(command);
+  args[i] = 0;
+  
   //Hard Coded Commands
   if (!strcmp(args[0], "exit")) {exit(0);}  
   else if(!strcmp(args[0], "cd")){
     chdir(args[1]);
   }
+  
   //Running process
   child = fork();
   if(child){
