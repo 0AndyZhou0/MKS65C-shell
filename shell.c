@@ -37,23 +37,13 @@ int main(int argc, char *argv[]){
 }
 
 char ** run_semicolon(char * line){
-  int count = 1;
-  char * temp = strchr(line,';');
-  while(temp != 0){
-    count++;
-    temp = strchr(temp + 1,';');
-    //while(temp[0] = ' '){
-    //  temp++;
-    //}
+  char * temp;
+  while(line){
+    temp = strsep(&line, ";");
+    if(temp){
+      run_command(temp);
+    }
   }
-  char **args = (char**)malloc((count) * sizeof(char*));
-  for(int i = 0;i < count + 1;i++){
-    args[i] = strsep(&line, ";");
-    printf("%s\n",args[i]);
-    //char ** commands = parse_args(args[i]);
-    run_command(args[i]);
-  }
-  
 }
 
 char * white_out(char * string){
@@ -77,30 +67,18 @@ void run_command(char * command){
   int status;
 
   //Splits arguments of command
-  //args = parse_args(command);
-  int count = 1;
-  char * temp = strchr(command,' ');
-  while(temp != 0){
-    temp = strchr(temp + 1,' ');
-    count++;
-  }
-  char **args = (char**)malloc((count) * sizeof(char*));
-  //for(int i = 0;i < count + 1;i++){
+  //Removed counting
+  char **args = (char**)malloc(99 * sizeof(char*));
   int i = 0;
   while(command){
     args[i] = strsep(&command, " ");
     if(args[i]){
       strcpy(args[i],white_out(args[i]));
-      printf("%s\n",args[i]);
+      printf("args[%d] : %s\n",i,args[i]);
     }
-    if(args[i] == 0){
+    if(args[i][0] == '\0'){
       i--;
     }
-    //args[i] = white_out(args[i]);
-    //if(!(args[i])){
-    //  i--;
-    //}
-    //Double Spaces are broken.
     i++;
   }
   args[i] = 0;
@@ -118,7 +96,19 @@ void run_command(char * command){
     pid = wait(&status);
   }else{
     //Child Code
+    //printf("%s\n",args[0]);
     execvp(args[0], args);
   }
   free(args);
 }
+
+/*
+  Old Counting Code
+  int count = 1;
+  char * temp = strchr(command,' ');
+  while(temp != 0){
+    temp = strchr(temp + 1,' ');
+    count++;
+  }
+
+ */
