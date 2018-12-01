@@ -74,7 +74,7 @@ void run_command(char * command){
     args[i] = strsep(&command, " ");
     if(args[i]){
       strcpy(args[i],white_out(args[i]));
-      printf("args[%d] : %s\n",i,args[i]);
+      //printf("args[%d] : %s\n",i,args[i]);
     }
     if(args[i][0] == '\0'){
       i--;
