@@ -70,25 +70,33 @@ void run_command(char * command){
   //Removed counting
   char **args = (char**)malloc(99 * sizeof(char*));
   int i = 0;
+  int arrow = 0;
   while(command){
     args[i] = strsep(&command, " ");
     if(args[i]){
       strcpy(args[i],white_out(args[i]));
-      //printf("args[%d] : %s\n",i,args[i]);
-    }
     if(args[i][0] == '\0'){
       i--;
     }
     i++;
   }
   args[i] = 0;
-  
+  //holds if arrow exists
+  int backup;
   //Hard Coded Commands
   if (!strcmp(args[0], "exit")) {exit(0);}  
   else if(!strcmp(args[0], "cd")){
     chdir(args[1]);
   }
-  
+  char output[64];
+  for(int i =0;args[i]!='\0';i++){
+          if(!strcmp(args[i],">") ||!strcmp(args[i],"<"))
+        {      
+            args[i]=NULL;
+            strcpy(output,args[i+1]);
+			arrow=i;
+        }   
+  }
   //Running process
   child = fork();
   if(child){
@@ -97,11 +105,15 @@ void run_command(char * command){
   }else{
     //Child Code
     //printf("%s\n",args[0]);
-    execvp(args[0], args);
-  }
-  free(args);
+	if(arrow){//runs if using arrows(only creates file and that's it :/)
+	int fd1=open(args[arrow+1],O_WRONLY|O_CREAT);    
+    dup2(fd1, STDIN_FILENO);
+	close(fd1);
+    }
+	execvp(args[0], args);
+	free(args);
+	}
 }
-
 /*
   Old Counting Code
   int count = 1;
