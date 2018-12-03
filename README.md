@@ -4,9 +4,9 @@ I'm ShellFish
 * Forks and executes commands.
 * Reads and separates multiples commands with ;
 * Can use commands exit and cd
+* Can use redirection(> and <)
 
 2. Features we attempted to make
-* Redirection(> and <)
 * Piping(|)
 3. Bugs
 * None so far
