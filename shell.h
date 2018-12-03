@@ -4,5 +4,7 @@
 #include <unistd.h>
 
 char ** run_semicolon(char * line);
+char ** run_pipe(char * line);
+char ** run_pipe(char * line);
 char * white_out(char * string);
 void run_command(char * command);

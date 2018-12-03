@@ -29,6 +29,8 @@ int main(int argc, char *argv[]){
     //checks for semicolon
     if(strchr(line,';')){
       commands = run_semicolon(line);
+    }else if(strchr(line,'|')){
+      commands = run_pipe(line);
     }else{
       run_command(line);
     }
@@ -41,11 +43,39 @@ char ** run_semicolon(char * line){
   while(line){
     temp = strsep(&line, ";");
     if(temp){
-      run_command(temp);
+		if(strchr(temp,'|')){
+			run_pipe(temp);
+		}
+		else{
+			run_command(temp);
+		}
     }
   }
 }
 
+char ** run_pipe(char * line){
+  char * temp;
+  char in[100]=" ";
+  int start = 0;
+  while(line){
+    temp = strsep(&line, "|");
+    if(temp){
+		if(start == 0){
+			strcat(temp," > something");
+			run_command(temp);
+			start++;
+		}
+		else{
+			strcpy(in,temp);
+			strcat(in," < something");
+			run_command(in);
+			strcat(temp," > something");
+			run_command(temp);
+		}
+    }
+	
+  }
+}
 char * white_out(char * string){
   char * no_space = string;
   int i = 0;
@@ -91,9 +121,7 @@ void run_command(char * command){
   }
   char output[100];
   char input[100];
-  for(int i =0;args[i]!='\0';i++){ //goes through args finding any arrows
-          if(!strcmp(args[i],">") ||!strcmp(args[i],"<"))
-        {      
+  for(int i =0;args[i]!='\0';i++){ //goes through args finding any arrows     
 			if(!strcmp(args[i],">")){
 			args[i]=NULL;
             strcpy(output,args[i+1]);
@@ -103,8 +131,7 @@ void run_command(char * command){
 			args[i]=NULL;
 			strcpy(input,args[i+1]);
 			leftArr=i;
-			}
-        }   
+			}   
   }
   //Running process
   child = fork();
