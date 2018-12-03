@@ -70,7 +70,9 @@ void run_command(char * command){
   //Removed counting
   char **args = (char**)malloc(99 * sizeof(char*));
   int i = 0;
-  int arrow = 0;
+  int leftArr = 0;
+  int rightArr =0;
+  
   while(command){
     args[i] = strsep(&command, " ");
     if(args[i]){
@@ -88,12 +90,20 @@ void run_command(char * command){
     chdir(args[1]);
   }
   char output[100];
-  for(int i =0;args[i]!='\0';i++){
+  char input[100];
+  for(int i =0;args[i]!='\0';i++){ //goes through args finding any arrows
           if(!strcmp(args[i],">") ||!strcmp(args[i],"<"))
         {      
-            args[i]=NULL;
+			if(!strcmp(args[i],">")){
+			args[i]=NULL;
             strcpy(output,args[i+1]);
-			arrow=i;
+			rightArr=i;
+			}
+			else if(!strcmp(args[i],"<")){
+			args[i]=NULL;
+			strcpy(input,args[i+1]);
+			leftArr=i;
+			}
         }   
   }
   //Running process
@@ -103,7 +113,12 @@ void run_command(char * command){
     pid = wait(&status);
   }else{
     //Child Code
-	if(arrow){//runs if using arrows
+	if(leftArr){//runs if using left arrow
+		int fd0=open(input,O_RDONLY);
+		dup2(fd0, STDIN_FILENO);
+		close(fd0); 
+	}
+	if(rightArr){//runs if using right arrow
 		int fd1=open(output,O_CREAT|O_WRONLY, 0777);
 		dup2(fd1, STDOUT_FILENO);
 		close(fd1);
