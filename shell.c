@@ -91,7 +91,8 @@ char ** run_pipe(char * line){
   if(line){
     //printf("%s\n",line);
     strcat(line," < something");
-    run_command(line);
+	strcat(line,"; rm something");
+    run_semicolon(line);
   }
   //char * args[] = {"rm", "rm something"};
   //execvp(args[0], args);
