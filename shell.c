@@ -93,41 +93,41 @@ char ** run_pipe(char * line){
     //printf("%s\n",line);
     strcat(line," < something");
     strcat(line,"; rm something");
-	if(start > 1){
-	 strcat(line,"; rm something2");
-	}
+    if(start > 1){
+      strcat(line,"; rm something2");
+    }
     run_semicolon(line);
   }
   //char * args[] = {"rm", "rm something"};
   //execvp(args[0], args);
 }
 /*
-char ** run_arrow(char * line, char * arrow){
+  char ** run_arrow(char * line, char * arrow){
   char output[100];
   char input[100];
   for(int i =0;args[i];i++){ //goes through args finding any arrows     
-    if(!strcmp(args[i],">")){
-      args[i]=NULL;
-      strcpy(output,args[i+1]);
-      rightArr=i;
-    }
-    else if(!strcmp(args[i],"<")){
-      args[i]=NULL;
-      strcpy(input,args[i+1]);
-      leftArr=i;
-    }   
+  if(!strcmp(args[i],">")){
+  args[i]=NULL;
+  strcpy(output,args[i+1]);
+  rightArr=i;
+  }
+  else if(!strcmp(args[i],"<")){
+  args[i]=NULL;
+  strcpy(input,args[i+1]);
+  leftArr=i;
+  }   
   }
   if(leftArr){//runs if using left arrow
-    int fd0=open(input,O_RDONLY);
-    dup2(fd0, STDIN_FILENO);
-    close(fd0); 
+  int fd0=open(input,O_RDONLY);
+  dup2(fd0, STDIN_FILENO);
+  close(fd0); 
   }
   if(rightArr){//runs if using right arrow
-    int fd1=open(output,O_CREAT|O_WRONLY, 0777);
-    dup2(fd1, STDOUT_FILENO);
-    close(fd1);
+  int fd1=open(output,O_CREAT|O_WRONLY, 0777);
+  dup2(fd1, STDOUT_FILENO);
+  close(fd1);
   }
-}
+  }
 */
 	
 char * white_out(char * string){
