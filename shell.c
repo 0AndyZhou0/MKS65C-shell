@@ -97,7 +97,34 @@ char ** run_pipe(char * line){
   //char * args[] = {"rm", "rm something"};
   //execvp(args[0], args);
 }
-
+/*
+	char ** run_arrow(char * line, char * arrow){
+		char output[100];
+		char input[100];
+		for(int i =0;args[i];i++){ //goes through args finding any arrows     
+		if(!strcmp(args[i],">")){
+		  args[i]=NULL;
+		  strcpy(output,args[i+1]);
+		  rightArr=i;
+		}
+		else if(!strcmp(args[i],"<")){
+		  args[i]=NULL;
+		  strcpy(input,args[i+1]);
+		  leftArr=i;
+		}   
+	  }
+		if(leftArr){//runs if using left arrow
+		  int fd0=open(input,O_RDONLY);
+		  dup2(fd0, STDIN_FILENO);
+		  close(fd0); 
+		}
+		if(rightArr){//runs if using right arrow
+		  int fd1=open(output,O_CREAT|O_WRONLY, 0777);
+		  dup2(fd1, STDOUT_FILENO);
+		  close(fd1);
+		}
+	}
+	*/
 char * white_out(char * string){
   char * no_space = string;
   int i = 0;
