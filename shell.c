@@ -67,6 +67,7 @@ char ** run_pipe(char * line){
 	run_command(temp);
 	start++;
       }else{
+	start++;
 	int backupfile = dup(STDOUT_FILENO);	
 	int file = open("something2", O_CREAT | O_RDWR, 0777);
 	dup2(file,1);
@@ -92,9 +93,9 @@ char ** run_pipe(char * line){
     //printf("%s\n",line);
     strcat(line," < something");
     strcat(line,"; rm something");
-		if(start > 1){
-	  	strcat(line,"; rm something2");
-		}
+	if(start > 1){
+	 strcat(line,"; rm something2");
+	}
     run_semicolon(line);
   }
   //char * args[] = {"rm", "rm something"};
