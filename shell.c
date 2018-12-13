@@ -8,11 +8,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <time.h>
-
-char ** run_semicolon(char * line);
-char ** run_pipe(char * line);
-char * white_out(char * string);
-void run_command(char * command);
+#include "shell.h"
 
 int main(int argc, char *argv[]){
   //Input stuff
