@@ -8,7 +8,11 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <time.h>
-#include "shell.h"
+
+char ** run_semicolon(char * line);
+char ** run_pipe(char * line);
+char * white_out(char * string);
+void run_command(char * command);
 
 int main(int argc, char *argv[]){
   //Input stuff
@@ -19,7 +23,7 @@ int main(int argc, char *argv[]){
   
   while(1){
     //gets USERNAME
-    printf("%s:%s$",getenv("USERNAME"),getcwd(buffer,sizeof(buffer)));
+    //printf("%s:%s$",getenv("USERNAME"),getcwd(buffer,sizeof(buffer)));
 
     // Reads charcters in single line until new line
     scanf("%[^\n]",line);
@@ -52,13 +56,57 @@ char ** run_semicolon(char * line){
     }
   }
 }
-
+char** parse_args(char* line, char* parse_at) {
+  char** args = calloc(sizeof(char*), 101);
+  int index = 0;
+  char* token;
+  while (line != NULL) {
+    token = strsep(&line, parse_at);
+    // ignores extra spaces
+    if (strcmp(token, "")) {
+      args[index] = token;
+      index++;
+    }
+  }
+  return args;
+}
 char ** run_pipe(char * line){
-  char * temp;
-  char backup[100];
-  char in[100];
-  int start = 0;
-  while(line && strchr(line,'|')){
+	char** args = calloc(sizeof(char*), 101);
+ if (line[0] == '|') {
+    printf("| : That looks a lot like not a command xD\n");
+    return args;
+  }
+  if (!strchr(line, '|')) { return 0; }
+  if (!fork()) {
+    int fds[2];
+    pipe(fds);
+
+    char** args = parse_args(line, "|");
+
+    char** left = parse_args(args[0], " ");
+    char** right = parse_args(args[1], " ");
+
+    if (fork()) {
+      close(fds[0]);
+      dup2(fds[1], STDOUT_FILENO);
+      execvp(left[0], left);
+      return args;
+    }
+    else {
+      wait(NULL);
+      close(fds[1]);
+      dup2(fds[0], STDIN_FILENO);
+      execvp(right[0], right);
+      return args;
+    }
+  }
+  else {
+    wait(NULL);
+    return args;
+  }
+  return args;
+}
+  /*while(line && strchr(line,'|')){
     temp = strsep(&line, "|");
     strcpy(backup,line); // backsup line because strcat overwrites line
     if(temp){
@@ -96,7 +144,7 @@ char ** run_pipe(char * line){
   }
   //char * args[] = {"rm", "rm something"};
   //execvp(args[0], args);
-}
+}*/
 /*
 	char ** run_arrow(char * line, char * arrow){
 		char output[100];
@@ -163,9 +211,10 @@ void run_command(char * command){
   args[i] = 0;
   
   //Hard Coded Commands
-  if (!strcmp(args[0], "exit")) {exit(0);}  
+  if (!strcmp(args[0], "exit")) {exit(0); return ;}  
   else if(!strcmp(args[0], "cd")){
     chdir(args[1]);
+	return ;
   }
   
   char output[100];
