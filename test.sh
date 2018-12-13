@@ -41,8 +41,4 @@ echo ___COMPARED_TO_YOURS:___
 echo _____________________________
 make
 make run < ktests/tests
-<<<<<<< HEAD
 rm -rf ktests
-=======
-rm -rf ktests
->>>>>>> 7c3465575dad6cf1790e332f31c7ac4bb178aefd
